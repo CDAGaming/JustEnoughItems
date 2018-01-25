@@ -1,3 +1,5 @@
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
+
 buildscript {
 	repositories {
 		jcenter()
@@ -13,7 +15,7 @@ buildscript {
 
 plugins {
 	id "com.matthewprenger.cursegradle" version "1.0.9"
-	id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.32"
+	id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.55"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -25,6 +27,9 @@ archivesBaseName = "jei_" + mcversion
 
 if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of the version string if on a build server
 	version += ".${System.getenv().BUILD_NUMBER}"
+}
+else {
+    version = 147
 }
 
 // java version
@@ -68,9 +73,9 @@ processResources {
 	rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
-task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-	filePath = "changelog.html"
-	untaggedName = "Current release ${project.version}"
+task makeChangelog(type: GitChangelogTask) {
+    file = new File("changelog.html")
+	untaggedName = "Current Release ${project.version}"
 	fromCommit = "2fe051cf727adce1be210a46f778aa8fe031331e"
 	toRef =  "HEAD"
 	templateContent = """
